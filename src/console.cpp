@@ -1,6 +1,7 @@
 #include <WiFiManager.h> //https://github.com/tzapu/WiFiManager
 #include <RedGlobals.h>
 
+dConsole console;
 /*
  * ********************************************************************************
 
@@ -75,7 +76,7 @@ void handleConsole()
     {
       strcpy(mqttServer, console.parameterString);
       console.println(mqttServer);
-      mqtt_client.disconnect();
+      mqttDisconnect();
       writeConfigToDisk();
       console.print("MQTT server changed to ");
       console.println(mqttServer);

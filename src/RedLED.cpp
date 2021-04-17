@@ -10,11 +10,26 @@
   It provides OTA functionality.
 
  *************************************************************************************/
+#include <Arduino.h>
 #include <Ticker.h>
 #include <pins.h>
 #include <RedGlobals.h>
 
 #include <MQTT.h>
+
+//const char version[10] = "V1.3-PIO";
+
+// configuration parameters
+// Hostname, AP name & MQTT clientID
+char myHostName[64];
+
+//define your default values here, if there are different values in config.json, they are overwritten.
+char deviceLocation[64] = "NEW";
+char mqttServer[64] = "MQTT";
+char mqttPort[16] = "1883";
+char mqttUser[64] = "";
+char mqttPwd[64] = "";
+char numberOfLED[64] = "64";  // nunber of leds in the strings
 
 
 
@@ -210,6 +225,7 @@ void configureMQTT()
  * ********************************************************************************
 */
 
+
 bool mqttConnect() {
 
   if (!mqtt_client.connected()) {
@@ -236,6 +252,11 @@ bool mqttConnect() {
     }
   }
   return true;
+}
+
+void mqttDisconnect()
+{
+  mqtt_client.disconnect();
 }
 
 

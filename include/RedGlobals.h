@@ -14,22 +14,27 @@
 #define _DISPLAY_INTERVAL 5000            // in ms how long before the display is dimmed then turned off
 
 
-const char *version = "V1.3-PIO";
+#define version "V1.3-PIO"
 
-dConsole console;
+extern dConsole console;
 
 // configuration parameters
 // Hostname, AP name & MQTT clientID
-char myHostName[64];
+extern char myHostName[];
 
 //define your default values here, if there are different values in config.json, they are overwritten.
-char deviceLocation[64] = "NEW";
-char mqttServer[64] = "MQTT";
-char mqttPort[16] = "1883";
-char mqttUser[64] = "";
-char mqttPwd[64] = "";
-char numberOfLED[64] = "64";  // nunber of leds in the strings
+extern char deviceLocation[];
+extern char mqttServer[];
+extern char mqttPort[];
+extern char mqttUser[];
+extern char mqttPwd[];
+extern char numberOfLED[];  // nunber of leds in the strings
 
+// 
+void configureMQTT();
+bool mqttConnect();
+void updateTemperature(float temp);
+void mqttCallback(char* topic, byte * payload, unsigned int length);
 
 // in console.ino
 void setupConsole();
@@ -39,6 +44,9 @@ void handleConsole();
 void configureESP(); // load configuration from FLASH & configure WIFI
 void checkConnection();   // check WIFI connection
 void writeConfigToDisk();
+void mqttDisconnect();
+void configureOTA(char *hostName);
+
 
 // in Sensors.ino
 void configSensors(long interval, void (*sensorCallback)(float temp));
@@ -49,5 +57,8 @@ void initializeLED(); // turn all LEDs off.
 void configLED();     // update with actual # of LED
 void setLEDPower(char *mode);   // set LED power
 void setLEDMode(int mode);      // & mode
+void executeLED();
+void fillList(uint32_t list[], int count);
+void fillRainbow();
 
 #endif
