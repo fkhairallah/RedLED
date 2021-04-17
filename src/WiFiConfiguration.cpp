@@ -146,6 +146,11 @@ void wtick()
   digitalWrite(blueLED, !state);     // set pin to the opposite state
 }
 
+void tickOFF()
+{
+  digitalWrite(blueLED,HIGH);
+}
+
 
 
 /*
@@ -330,6 +335,8 @@ void configureESP()
   //console.println("connected...yeey :)");
   secondsWithoutWIFI = 0;
   wticker.detach();
+  tickOFF();
+  
 
   // configure mDNS so we can reach it via .local (sometimes)
   if (!MDNS.begin(myHostName)) {

@@ -11,7 +11,6 @@
 
  *************************************************************************************/
 #include <Arduino.h>
-#include <Ticker.h>
 #include <pins.h>
 #include <RedGlobals.h>
 
@@ -23,7 +22,7 @@ unsigned long lastTempSend;
 float averageTemp;        // Average temp for the last interval -- what is displayed
 
 
-Ticker ticker;
+
 
 void tick()
 {
@@ -48,12 +47,7 @@ void setup() {
 
   initializeLED();    // turn all LEDs off.
 
-  // start ticker with 0.5 because we start in AP mode and try to connect
-  ticker.attach(0.6, tick);
-
   setupConsole();
-
-
 
   console.print("[RED]LED ");
   console.println(VERSION);
@@ -64,7 +58,6 @@ void setup() {
 
   configLED();  // update with actual # of LED
 
-  digitalWrite(blueLED, LOW);
   console.print("Connected! IP address: ");
   console.println(WiFi.localIP().toString());
 
@@ -80,6 +73,7 @@ void setup() {
 #endif
 
   console.println("Ready!");
+  digitalWrite(blueLED, HIGH);
 }
 
 
