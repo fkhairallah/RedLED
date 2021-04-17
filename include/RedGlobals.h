@@ -13,10 +13,13 @@
  * ********************************************************************************
 */
 
+//#define TEMP_SENSOR_PRESENT                 // indicates a temperature sensor is present
+
+#ifdef TEMP_SENSOR_PRESENT
 #define _TEMP_SENSOR_PERIOD 10000         // in ms the frequency of temperature sensor reading
 #define _SEND_ROOM_TEMP_INTERVAL_MS 60000 // in ms how often the temperature is sent back to the server
-#define _DISPLAY_INTERVAL 5000            // in ms how long before the display is dimmed then turned off
 #define TEMPERATURE_PRECISION 9           // Lower resolution
+#endif
 
 #define VERSION "V1.3-PIO"
 #define MQTT_TOPIC_PREFIX "led" // prefix for all MQTT topics
@@ -53,9 +56,12 @@ extern dConsole console;
 void setupConsole();
 void handleConsole();
 
+#ifdef TEMP_SENSOR_PRESENT
 // in Sensors.ino
 void configSensors(long interval, void (*sensorCallback)(float insideTemp, float outsideTemp));
 void serviceSensors();
+#endif
+
 
 // in lighting.ino
 void initializeLED(); // turn all LEDs off.

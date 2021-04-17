@@ -1,3 +1,4 @@
+#ifdef TEMP_SENSOR_PRESENT
 /*
  * ********************************************************************************
 
@@ -112,3 +113,5 @@ void serviceSensors()
     lastSensorQuery = millis();
   }
 }
+
+#endif
