@@ -24,6 +24,17 @@
 #include <Pins.h>
 #include <RedGlobals.h>
 
+// configuration parameters
+// Hostname, AP name & MQTT clientID
+char myHostName[64];
+
+//define your default values here, if there are different values in config.json, they are overwritten.
+char deviceLocation[64] = "NEW";
+char mqttServer[64] = "MQTT";
+char mqttPort[16] = "1883";
+char mqttUser[64] = "";
+char mqttPwd[64] = "";
+char numberOfLED[64] = "64"; // nunber of leds in the strings
 
 //flag for saving data
 bool shouldSaveConfig = false;
@@ -134,7 +145,6 @@ void readConfigFromDisk()
           if (json["mqttUser"].success()) strcpy(mqttUser, json["mqttUser"]);
           if (json["mqttPwd"].success()) strcpy(mqttPwd, json["mqttPwd"]);
           if (json["ledNumber"].success()) strcpy(numberOfLED, json["ledNumber"]);
-
         } else 
         {
           console.println("failed to load json config");
@@ -169,7 +179,6 @@ void writeConfigToDisk()
   json["mqttUser"] = mqttUser;
   json["mqttPwd"] = mqttPwd;
   json["ledNumber"] = numberOfLED;
-  
 
   File configFile = LittleFS.open("/config.json", "w");
   if (!configFile) {

@@ -24,7 +24,7 @@ void handleConsole()
     if (strcmp(console.commandString, "?") == 0)
     {
       console.print("\n\n\nCabinetsLED ");
-      console.println(version);
+      console.println(VERSION);
       console.print("IP address: ");
       console.println(WiFi.localIP().toString());
       console.println("Available commands are: on, off, mode x, led #, location room, mqtt server, status, reset (Factory), reboot");
