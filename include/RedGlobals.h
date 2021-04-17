@@ -5,6 +5,10 @@
 #include <PubSubClient.h>
 #include <Ticker.h>
 
+#ifndef _PINS_H
+#include <pins.h>
+#endif
+
 #include <dConsole.h>
 
 /*
@@ -72,8 +76,12 @@ void executeLED();
 void fillList(uint32_t list[], int count);
 void fillRainbow();
 
-// in RedGarage
+// in RedLED
+void ledON();
+void ledOFF();
+void tick();
+#ifdef TEMP_SENSOR_PRESENT
 void updateTemperature(float temp, float outdoorTemp);
-
+#endif
 
 #endif

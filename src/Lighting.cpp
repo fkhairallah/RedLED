@@ -1,5 +1,4 @@
 //#include <FastLED.h>
-#include <pins.h>
 #include <Adafruit_NeoPixel.h>
 
 #include <RedGlobals.h>
@@ -14,7 +13,7 @@
 
 #define LED_UPDATE_INTERVAL 30000   // LED update interval
 
-bool  ledON;          // Led is on or off
+bool  ledStripON;     // Led is on or off
 int   ledMode;        // mode of display 1 - 2700K, 2 - rainbow,
 //CRGB leds[NUM_LEDS];
 long lastLEDUpdate;   // hold last time update was sent to LED
@@ -48,7 +47,7 @@ void configLED()
   strip.show();            // Turn OFF all pixels ASAP
   strip.setBrightness(LED_BRIGHTNESS); // Set BRIGHTNESS to about 1/5 (max = 255)
 
-  ledON = false;
+  ledStripON = false;
   ledMode = 1;
   executeLED();
 
@@ -72,12 +71,12 @@ void setLEDPower(char* mode)
   //  console.print("setLEDPower=");
   if ( ((atof(mode) > 0) && (atof(mode) <= 1) ) || (strcmp(mode, "1") == 0)
       || (strcmp(mode, "ON") == 0) ) {
-    ledON = true;
+    ledStripON = true;
     console.println("LEDs turned on");
   }
   else
   {
-    ledON = false;
+    ledStripON = false;
     console.println("LEDs turned off");
   }
 
@@ -95,7 +94,7 @@ void setLEDMode(int mode)
 void executeLED()
 {
 
-  if (ledON)  // if ON determine what to display
+  if (ledStripON) // if ON determine what to display
   {
     switch (ledMode)
     {

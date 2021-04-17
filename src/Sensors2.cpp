@@ -7,7 +7,6 @@
 */
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include <pins.h>
 #include <RedGlobals.h>
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)

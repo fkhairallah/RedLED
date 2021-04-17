@@ -11,7 +11,6 @@
 
  *************************************************************************************/
 #include <Arduino.h>
-#include <pins.h>
 #include <RedGlobals.h>
 
 
@@ -21,8 +20,21 @@ int tempNumberOfReading;  // keeps # of readings
 unsigned long lastTempSend;
 float averageTemp;        // Average temp for the last interval -- what is displayed
 
+/*
+ * ********************************************************************************
 
+ a few routines to drive the onboard blueLED
 
+ * ********************************************************************************
+*/
+void ledON()
+{
+  digitalWrite(blueLED, false);
+}
+void ledOFF()
+{
+  digitalWrite(blueLED, true);
+}
 
 void tick()
 {
@@ -30,7 +42,6 @@ void tick()
   int state = digitalRead(blueLED); // get the current state of GPIO1 pin
   digitalWrite(blueLED, !state);    // set pin to the opposite state
 }
-
 
 /*
  * ********************************************************************************
@@ -95,8 +106,7 @@ void loop() {
 
   checkMQTTConnection(); // check MQTT
 
-  // handle any commands from console
-  handleConsole();
+  handleConsole(); // handle any commands from console
 
 }
 
