@@ -1,4 +1,4 @@
-# RedThermostat
+# RedLED
 
 [RED]LED  is an ESP8266-based IOT that implements under-cabinet lighting
 
