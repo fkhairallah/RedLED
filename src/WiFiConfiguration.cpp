@@ -1,16 +1,19 @@
-/*
- * ********************************************************************************
-
- This file manages the top-level WIFI and board configuration for [Red] based projects
- 
- - Factory-fresh or unable to connect to WIFI it fires up a hotspot and a web server and allows the user to
-    configure device parameters
-
- - If a WIFI configuration exists, it connects then reads the configuration from config.json
-   and proceeds.
-
- * ********************************************************************************
-*/
+/**********************************************************************************
+ * 
+ * Converted to work with ArdionJSON V6 
+ * 
+ **********************************************************************************
+ *
+ * This file manages the top-level WIFI and board configuration 
+ * for [Red] based projects:
+ * 
+ * - Factory-fresh or unable to connect to WIFI it fires up a hotspot and a 
+ *    web server and allows the user to configure device parameters
+ * 
+ * - If a WIFI configuration exists, it connects then reads the configuration 
+ *    from config.json and proceeds.
+ * 
+ *********************************************************************************/
 #include <FS.h>                   //this needs to be first, or it all crashes and burns...
 #include <DNSServer.h>
 #include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
@@ -36,8 +39,6 @@ bool otaInProgress; // flags if OTA is in progress
 //for LED status
 Ticker wticker;
 
-// hold configurations as stored on disk
-DynamicJsonBuffer jsonBuffer;
 
 /*
  * ********************************************************************************
@@ -66,22 +67,22 @@ WiFiManagerParameter custom_mqttPwd("pwd", "mqtt password", mqttPwd, 64);
 WiFiManagerParameter custom_ledNumber("led", "Number of LEDs", numberOfLED, 64);
 
 // load parameters form JSON that was saved to disk
-void loadParametersfromJSON(JsonObject &json)
+void loadParametersfromJSON(DynamicJsonDocument json)
 {
-  //console.println("\nparsed json");
-  if (json["deviceLocation"].success())  strcpy(deviceLocation, json["deviceLocation"]);
-  if (json["mqttServer"].success())      strcpy(mqttServer, json["mqttServer"]);
-  if (json["mqttPort"].success())        strcpy(mqttPort, json["mqttPort"]);
-  if (json["mqttUser"].success())        strcpy(mqttUser, json["mqttUser"]);
-  if (json["mqttPwd"].success())        strcpy(mqttPwd, json["mqttPwd"]);
-  if (json["ledNumber"].success())
-    strcpy(numberOfLED, json["ledNumber"]);
+  if (json.containsKey("deviceLocation"))   strcpy(deviceLocation, json["deviceLocation"]);
+  if (json.containsKey("mqttServer"))       strcpy(mqttServer, json["mqttServer"]);
+  if (json.containsKey("mqttPort"))         strcpy(mqttPort, json["mqttPort"]);
+  if (json.containsKey("mqttUser"))         strcpy(mqttUser, json["mqttUser"]);
+  if (json.containsKey("mqttPwd"))          strcpy(mqttPwd, json["mqttPwd"]);
+  if (json.containsKey("ledNumber"))        strcpy(mqttPwd, json["ledNumber"]);
 }
 
 // save parameters to a JSON object so they can saved to disk
-JsonObject* saveParametersToJSON()
+DynamicJsonDocument saveParametersToJSON()
 {
-  JsonObject &json = jsonBuffer.createObject();
+  DynamicJsonDocument json(200);
+
+
   json["deviceLocation"] = deviceLocation;
   json["mqttServer"] = mqttServer;
   json["mqttPort"] = mqttPort;
@@ -89,7 +90,7 @@ JsonObject* saveParametersToJSON()
   json["mqttPwd"] = mqttPwd;
   json["ledNumber"] = numberOfLED;
 
-  return &json;
+  return json;
 }
 
 // load parameters into webserver custom data slots
@@ -150,8 +151,6 @@ void tickOFF()
   digitalWrite(blueLED,HIGH);
 }
 
-
-
 /*
  * ********************************************************************************
  * This routine will check the Wifi status, and reset the ESP is unable to connect
@@ -173,15 +172,13 @@ void checkConnection()
       delay(5000);
     }
   }
-  
-  MDNS.update();      // and refresh mDNS
+
+  MDNS.update(); // and refresh mDNS
 
   // handle OTA -- if in progress stop talking to the heat pump and console so as not to disturb the upload
   // THIS NEEDS TO BE THE FIRST ITEM IN LOOP
   ArduinoOTA.handle();
-
 }
-
 
 /*
  * ********************************************************************************
@@ -203,25 +200,25 @@ void readConfigFromDisk()
       //file exists, reading and loading
       //console.println("reading config file");
       File configFile = LittleFS.open("/config.json", "r");
-      if (configFile) {
+      if (configFile)
+      {
         //console.println("opened config file");
         size_t size = configFile.size();
         // Allocate a buffer to store contents of the file.
         std::unique_ptr<char[]> buf(new char[size]);
 
         configFile.readBytes(buf.get(), size);
-        JsonObject& json = jsonBuffer.parseObject(buf.get());
-
-        if (json.success()) 
+        DynamicJsonDocument json(200);
+        auto error = deserializeJson(json, buf.get());
+        if (!error)
         {
           loadParametersfromJSON(json);
-        } 
-        else 
+        }
+        else
         {
           console.println("failed to load json config");
         }
         configFile.close();
-
       }
     }
   }
@@ -230,7 +227,6 @@ void readConfigFromDisk()
     console.println("failed to mount FS");
   }
   //end read
-
 }
 /*
  * ********************************************************************************
@@ -242,20 +238,19 @@ void readConfigFromDisk()
 void writeConfigToDisk()
 {
 
-
   File configFile = LittleFS.open("/config.json", "w");
-  if (!configFile) {
+  if (!configFile)
+  {
     console.println("failed to open config file for writing");
   }
   else
   {
-    JsonObject *json = saveParametersToJSON();
-    json->printTo(configFile);
+    DynamicJsonDocument json = saveParametersToJSON();
+    serializeJson(json, configFile);
     configFile.close();
     console.println("config saved to disk");
   }
 }
-
 
 /*
  * ********************************************************************************
@@ -271,7 +266,6 @@ void configureESP()
 
   readConfigFromDisk();
 
-
   //WiFiManager
   //Local intialization. Once its business is done, there is no need to keep it around
   WiFiManager wifiManager;
@@ -279,9 +273,8 @@ void configureESP()
   // don't output shit in Serial port -- it messes with heatpump
   wifiManager.setDebugOutput(false);
 
-
   //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
-  wifiManager.setAPCallback([](WiFiManager * myWIFI) {
+  wifiManager.setAPCallback([](WiFiManager *myWIFI) {
     console.println("Entered config mode");
     console.println(WiFi.localIP().toString());
     //if you used auto generated SSID, print it
@@ -320,7 +313,8 @@ void configureESP()
   //if it does not connect it starts an access point with the specified name
   //here  "AutoConnectAP"
   //and goes into a blocking loop awaiting configuration
-  if (!wifiManager.autoConnect(myHostName)) {
+  if (!wifiManager.autoConnect(myHostName))
+  {
     console.println("failed to connect and hit timeout");
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
@@ -335,17 +329,17 @@ void configureESP()
   secondsWithoutWIFI = 0;
   wticker.detach();
   tickOFF();
-  
 
   // configure mDNS so we can reach it via .local (sometimes)
-  if (!MDNS.begin(myHostName)) {
+  if (!MDNS.begin(myHostName))
+  {
     console.println("Error setting up MDNS responder!");
   }
   else
   {
     MDNS.addService("telnet", "tcp", 23); // Announce telnet tcp service on port 8080
     //MDNS.addServiceTxt(hMDNSService, "app_name", "CabinetsLED");
-    //MDNS.addServiceTxt(hMDNSService, "app_version", version;    
+    //MDNS.addServiceTxt(hMDNSService, "app_version", version;
     MDNS.update();
 
     console.println("mDNS responder started");
@@ -354,11 +348,9 @@ void configureESP()
   // and OTA
   configureOTA(myHostName);
 
-
   //if the portal changed the parameters then save the custom parameters to FS
-  if (shouldSaveConfig)  writeConfigToDisk();
-
-
+  if (shouldSaveConfig)
+    writeConfigToDisk();
 }
 
 /*

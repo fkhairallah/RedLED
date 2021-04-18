@@ -25,7 +25,7 @@
 #define TEMPERATURE_PRECISION 9           // Lower resolution
 #endif
 
-#define VERSION "V1.3-PIO"
+#define VERSION "V1.3"      // N.B: document changes in README.md
 #define MQTT_TOPIC_PREFIX "led" // prefix for all MQTT topics
 
 // in WiFiConfigurations.ino
