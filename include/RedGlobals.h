@@ -25,10 +25,10 @@
 #define TEMPERATURE_PRECISION 9           // Lower resolution
 #endif
 
-#define VERSION "V1.3"      // N.B: document changes in README.md
+#define VERSION "V1.4"      // N.B: document changes in README.md
 #define MQTT_TOPIC_PREFIX "led" // prefix for all MQTT topics
 
-// in WiFiConfigurations.ino
+// in WiFiConfig
 extern char myHostName[];
 extern char deviceLocation[];
 extern char mqttServer[];
@@ -41,15 +41,8 @@ void checkConnection(); // check WIFI connection
 void writeConfigToDisk();
 void configureOTA(char *hostName);
 
-// in MQTT
-extern PubSubClient mqtt_client;
-extern char mqtt_topic[];
-extern char mqtt_temperature_topic[];
-extern char mqtt_outdoortemperature_topic[];
-extern char mqtt_doorbell_topic[];
-extern char mqtt_garagedoor_topic[];
-extern char mqtt_debug_topic[];
-extern char mqtt_debug_set_topic[];
+// in MQTTConfig
+extern bool debugMode;
 void configureMQTT();
 bool checkMQTTConnection();
 void mqttDisconnect();

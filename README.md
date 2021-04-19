@@ -12,9 +12,9 @@ It implements simple ON/OFF functionality but can also display various modes
 ## Version 1.0-1.2
   V1.0 was development in the Arduino IDE in 2018
 ## Version 1.3PIO
-  **curently deployed** Direct port to Platform.IO and conversion to C++ while still retaining the original JSON5 Library
+  Direct port to Platform.IO and conversion to C++ while still retaining the original JSON5 Library
 ## Version 1.4
-    updated to use JSON6 library
+  **curently deployed** updated to use JSON6 library and [RED]Template
     
 # Hardware Notes
  * 

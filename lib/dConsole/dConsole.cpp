@@ -74,6 +74,11 @@ void dConsole::disableTelnet()
 	}
 }
 
+void dConsole::closeTelnetConnection()
+{
+	if (client) client.stop();
+}
+
 void dConsole::enableUDP(IPAddress localIP, int port)
 {
 	udpPort = port;
@@ -143,7 +148,13 @@ bool dConsole::isTelnetConnected() {
     {
 		if (server->status() == CLOSED) return true;
 
-		if (!client) client = server->available();
+		// if we don't have a client, check to see if we have one.
+		// then flush the queue so we don't get weird characters
+		if (!client) 
+		{
+			client = server->available();
+			client.flush();
+		}
 	
 
 		if (client) {
@@ -153,6 +164,7 @@ bool dConsole::isTelnetConnected() {
 		  // client is not connected, stop and get a new one
 		  client.stop();
 		  client = server->available();
+		  client.flush();
 
 		}
 	}
@@ -217,7 +229,9 @@ void dConsole::flush() {
 
   if (disconnected()) return;
 
-  server->flush();
+  serial->flush();
+
+  client.flush();
 
 }
 
@@ -262,6 +276,7 @@ bool dConsole::check()
 					println("Connected to [RED] debug console");
 					println("'?' for more, 'exit' to exit");
 					print("[RED]> ");
+
 				}
 			}
 		}
@@ -273,6 +288,22 @@ bool dConsole::check()
 			while (client.available()) {
 				char c = client.read();
 				yield();	// yield back to the OS
+
+
+				if (c == '\x08') // backspace
+				{
+					if (bufferCount > 0)
+					{
+						tempBuffer[--bufferCount] = 0;
+					}
+
+				}
+				if (c == '\x15') // Control U -- erase entire line
+				{
+					bufferCount = 0;
+					tempBuffer[bufferCount] = 0;
+				}
+
 				if (c == '\r') continue; // ignore CR
 				if ((c == '\n') || (bufferCount >= CMD_MAX_LENGTH) )  // LF is a command
 				{
@@ -289,10 +320,10 @@ bool dConsole::check()
 					// we have a full line--> exit true
 					return parseCommand();
 				}
-				else {
+				else 
+				{
 					tempBuffer[bufferCount++] = c;
 					tempBuffer[bufferCount] = 0;
-
 				}
 			}
 		}
@@ -315,8 +346,6 @@ void dConsole::sendUDP(char* sentence)
   udp.write(sentence);
   udp.endPacket();
 }
-
-
 
 
 // parse line typed in into a command and a parameter
