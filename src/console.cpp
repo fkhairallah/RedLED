@@ -60,7 +60,9 @@ void handleConsole()
 
     if (strcmp(console.commandString, "?") == 0)
     {
-      console.print("[RED]Thermostat ");
+      console.print("[RED]");
+      console.print(MQTT_TOPIC_PREFIX);
+      console.print(" ");
       console.println(VERSION);
       console.printf("Host: %s - %s @", myHostName, deviceLocation);
       console.println(WiFi.localIP().toString());
