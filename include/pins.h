@@ -14,7 +14,7 @@
 //#define ONE_WIRE_BUS 3 // 1Wire Data in
 #define ONE_WIRE_BUS 14
 
-#define NUM_LEDS 30        // Max # of LEDS
+#define NUM_LEDS 40        // Max # of LEDS
 #define LED_BRIGHTNESS 250 // NeoPixel brightness, 0 (min) to 255 (max)
 
 #endif

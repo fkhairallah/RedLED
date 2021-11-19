@@ -76,7 +76,7 @@ void loadParametersfromJSON(DynamicJsonDocument json)
   if (json.containsKey("mqttUser"))        strcpy(mqttUser, json["mqttUser"]);
   if (json.containsKey("mqttPwd"))        strcpy(mqttPwd, json["mqttPwd"]);
 
-  if (json.containsKey("ledNumber")) strcpy(mqttPwd, json["ledNumber"]);
+  if (json.containsKey("ledNumber")) strcpy(numberOfLED, json["ledNumber"]);
 }
 
 // save parameters to a JSON object so they can saved to disk

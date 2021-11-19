@@ -14,7 +14,13 @@ It implements simple ON/OFF functionality but can also display various modes
 ## Version 1.3PIO
   Direct port to Platform.IO and conversion to C++ while still retaining the original JSON5 Library
 ## Version 1.4
-  **curently deployed** updated to use JSON6 library and [RED]Template
+  Updated to use JSON6 library and [RED]Template
+## Version 1.5
+  Fix to address lack of reliability in LED operation 
+  - inability to store # of LED on disk
+  - Fridge unit hardware update to include 1000uF and level shifter and in-line resistor on data line -- didn't help
+  - Modified logic to turn LEDS on one at a time to reduce current shock
+  
     
 # Hardware Notes
  * 

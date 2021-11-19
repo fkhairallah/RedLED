@@ -40,8 +40,6 @@ void initializeLED()
 void configLED()
 {
 
-
-
   strip.updateLength(atoi(numberOfLED));
   strip.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
   strip.show();            // Turn OFF all pixels ASAP
@@ -52,10 +50,23 @@ void configLED()
   executeLED();
 
   console.println(String(atoi(numberOfLED)) + " LEDS configured");
-
-
 }
 
+// show a green pattern on the LED strip
+void testLED()
+{
+  strip.clear();
+
+  for (int i = 0; i < atoi(numberOfLED); i++)
+  {
+
+    strip.setPixelColor(i, strip.Color(0, 150, 0));
+    strip.show();
+    console.printf("LED %d set to green\r\n", i);
+    delay(50);
+  }
+
+}
 
 
 /*
@@ -99,45 +110,58 @@ void executeLED()
     switch (ledMode)
     {
       case 1: // 100W tungsten -- Pam's favorite
-        strip.fill(strip.gamma32(strip.Color(255, 214, 170)));
-        strip.show();
+        stripFill(strip.gamma32(strip.Color(255, 214, 170)));
+        //strip.show();
         console.println("ON");
         break;
       case 2: // dimmed 50W tungsten
-        strip.fill(strip.gamma32(strip.Color(255 / 2, 202 / 2, 148 / 2)));
-        strip.show();
+        stripFill(strip.gamma32(strip.Color(255 / 2, 202 / 2, 148 / 2)));
+        //strip.show();
         console.println("DIMMED");
         break;
       case 3: // navy blue
-        strip.fill(strip.gamma32(strip.Color(0, 0, 128)));
-        strip.show();
+        stripFill(strip.gamma32(strip.Color(0, 0, 128)));
+        //strip.show();
         console.println("BLUE");
         break;
       case 4: // Xmas
         fillList(rgbList, 2);
-        strip.show();
+        //strip.show();
         console.println("XMAS");
         break;
       case 5: // Rainbow
         fillRainbow();
-        strip.show();
+        //strip.show();
         console.println("RAINBOW");
         break;
       default: // full white
-        strip.fill(strip.gamma32(strip.Color(255, 255, 255)));
-        strip.show();
+        stripFill(strip.gamma32(strip.Color(255, 255, 255)));
+        //strip.show();
         console.println("Default");
     }
   }
   else
   {
-    strip.clear();
+    stripFill(strip.gamma32(strip.Color(0, 0, 0)));
+    //strip.clear();
     strip.show();
     console.println("OFF");
   }
 
   console.println("LEDs updated");
 
+}
+
+// fill entire strip with a single color 
+void stripFill(uint32_t color)
+{
+
+  for (int i = 0; i < atoi(numberOfLED); i++)
+  {
+    strip.setPixelColor(i, color);
+    strip.show();
+    delay(50);
+  }
 }
 
 // Fill strip pixels one after another with a color. Strip is NOT cleared
@@ -164,6 +188,8 @@ void fillRainbow()
     if ( (i % 3) == 0) strip.setPixelColor(i, strip.Color(255, 0, 0)); //  Red
     if ( (i % 3) == 1) strip.setPixelColor(i, strip.Color(0, 255, 0)); //  Green
     if ( (i % 3) == 2) strip.setPixelColor(i, strip.Color(0, 0, 255)); //  Blue
+    strip.show();                          //  Update strip to match
+    delay(50);
   }
 
 }
@@ -175,6 +201,8 @@ void fillList(uint32_t list[], int count)
   for (int i = 0; i < strip.numPixels(); i++) { // For each pixel in strip...
     strip.setPixelColor(i, list[listCount++]);
     if (listCount >= count) listCount = 0;
+    strip.show();                          //  Update strip to match
+    delay(50);
   }
 
 }

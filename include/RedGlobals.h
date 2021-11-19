@@ -25,7 +25,7 @@
 #define TEMPERATURE_PRECISION 9           // Lower resolution
 #endif
 
-#define VERSION "V1.4"      // N.B: document changes in README.md
+#define VERSION "V1.5"      // N.B: document changes in README.md
 #define MQTT_TOPIC_PREFIX "led" // prefix for all MQTT topics
 
 // in WiFiConfig
@@ -63,9 +63,11 @@ void serviceSensors();
 // in lighting.ino
 void initializeLED(); // turn all LEDs off.
 void configLED();     // update with actual # of LED
+void testLED();       // test all LEDs
 void setLEDPower(char *mode);   // set LED power
 void setLEDMode(int mode);      // & mode
 void executeLED();
+void stripFill(uint32_t color);
 void fillList(uint32_t list[], int count);
 void fillRainbow();
 

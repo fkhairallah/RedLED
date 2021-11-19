@@ -6,6 +6,7 @@
 #include <WiFiManager.h> //https://github.com/tzapu/WiFiManager
 #include <RedGlobals.h>
 
+
 dConsole console;
 
 /*
@@ -15,7 +16,7 @@ dConsole console;
 
  * ********************************************************************************
 */
-#define CUSTOM_COMMANDS "Custom Commands: on, off, mode x, led #"
+#define CUSTOM_COMMANDS "Custom Commands: on, off, mode #, led #, test"
 
 void executeCustomCommands(char* commandString,char* parameterString)
 {
@@ -31,8 +32,15 @@ void executeCustomCommands(char* commandString,char* parameterString)
   if (strcmp(commandString, "led") == 0)
   {
     strcpy(numberOfLED, parameterString);
+    configLED();
     writeConfigToDisk();
     console.printf("Number of LEDs changed to %s\r\n", numberOfLED);
+  }
+
+  if (strcmp(commandString, "test") == 0)
+  {
+    console.println(CUSTOM_COMMANDS);
+    testLED();
   }
 }
 
@@ -66,7 +74,7 @@ void handleConsole()
       console.println(VERSION);
       console.printf("Host: %s - %s @", myHostName, deviceLocation);
       console.println(WiFi.localIP().toString());
-      console.printf("MQTT Server %s, port: %s\r\n", mqttServer, mqttPort);
+      console.printf("MQTT Server %s, port: %s, LED: %s\r\n", mqttServer, mqttPort, numberOfLED);
       console.println("Commands: ?, debug, location room, mqtt server, reset (Factory), reboot, quit");
       console.println(CUSTOM_COMMANDS);
     }
