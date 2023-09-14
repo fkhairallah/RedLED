@@ -40,31 +40,32 @@ Ticker wticker;
 
 //define your default values here, if there are different values in config.json, they are overwritten.
 char deviceLocation[64] = "NEW";
-char mqttServer[64] = "RyeManorPi.local";
+char mqttServer[64] = "Carbon.local";
 char mqttPort[16] = "1883";
 char mqttUser[64] = "";
 char mqttPwd[64] = "";
 char numberOfLED[64] = "64"; // nunber of leds in the strings
+char NoaaStation[16] = "8722718";   // Noaa station to display
 
-/*
- * ********************************************************************************
+    /*
+     * ********************************************************************************
 
-  ********************  CUSTOMIZABLE SECTION  ***************************
+      ********************  CUSTOMIZABLE SECTION  ***************************
 
- * ********************************************************************************
-*/
+     * ********************************************************************************
+    */
 
-
-// The extra parameters to be configured (can be either global or just in the setup)
-// After connecting, parameter.getValue() will get you the configured value
-// id/name placeholder/prompt default length
-WiFiManagerParameter custom_deviceLocation("location", "Device Location", deviceLocation, 64);
+    // The extra parameters to be configured (can be either global or just in the setup)
+    // After connecting, parameter.getValue() will get you the configured value
+    // id/name placeholder/prompt default length
+    WiFiManagerParameter custom_deviceLocation("location", "Device Location", deviceLocation, 64);
 WiFiManagerParameter custom_mqttServer("server", "mqtt server", mqttServer, 64);
 WiFiManagerParameter custom_mqttPort("port", "mqtt port", mqttPort, 16);
 WiFiManagerParameter custom_mqttUser("user", "mqtt user", mqttUser, 64);
 WiFiManagerParameter custom_mqttPwd("pwd", "mqtt password", mqttPwd, 64);
 
 WiFiManagerParameter custom_ledNumber("led", "Number of LEDs", numberOfLED, 64);
+WiFiManagerParameter custom_noaaStation("noaa", "NOAA Station Number", NoaaStation, 16);
 
 // load parameters form JSON that was saved to disk
 void loadParametersfromJSON(DynamicJsonDocument json)
@@ -76,7 +77,8 @@ void loadParametersfromJSON(DynamicJsonDocument json)
   if (json.containsKey("mqttUser"))        strcpy(mqttUser, json["mqttUser"]);
   if (json.containsKey("mqttPwd"))        strcpy(mqttPwd, json["mqttPwd"]);
 
-  if (json.containsKey("ledNumber")) strcpy(numberOfLED, json["ledNumber"]);
+  if (json.containsKey("ledNumber"))      strcpy(numberOfLED, json["ledNumber"]);
+  if (json.containsKey("noaaStation"))    strcpy(numberOfLED, json["noaaStation"]);
 }
 
 // save parameters to a JSON object so they can saved to disk
@@ -92,8 +94,9 @@ DynamicJsonDocument saveParametersToJSON()
   json["mqttPwd"] = mqttPwd;
 
   json["ledNumber"] = numberOfLED;
+  json["noaaStation"] = NoaaStation;
 
-  return json;
+      return json;
 }
 
 // load parameters into webserver custom data slots
@@ -108,6 +111,7 @@ void loadParametersToWeb(WiFiManager* wfm)
 
   /* custom */
   wfm->addParameter(&custom_ledNumber);
+  wfm->addParameter(&custom_noaaStation);
 }
 
 // this is called by the SUBMIT action of the webserver
@@ -122,6 +126,7 @@ void saveParametersFromWeb()
     strcpy(mqttPwd, custom_mqttPwd.getValue());
 
     strcpy(numberOfLED, custom_ledNumber.getValue());
+    strcpy(NoaaStation, custom_noaaStation.getValue());
 
     console.println("Should save config");
     shouldSaveConfig = true;

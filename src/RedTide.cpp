@@ -1,6 +1,6 @@
 /************************************************************************************
 
-   LED ESP
+   [RED]Tide ESP controller for Tide Clock using 8212 addressable LEDs
 
    Hardware Configuration parameters are found in .h file
 
@@ -60,7 +60,7 @@ void setup() {
 
   setupConsole();
 
-  console.print("[RED]LED ");
+  console.print("[RED]Tide ");
   console.println(VERSION);
 
 

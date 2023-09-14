@@ -1,14 +1,17 @@
 # RedLED
 
-[RED]LED  is an ESP8266-based IOT that implements under-cabinet lighting
+[RED]Tide  is an ESP8266-based IOT that implements tide clock using addresseable LED
+It is based on RedLED under-cabinet lighting program that was superseeded with WLED
 
-It implements simple ON/OFF functionality but can also display various modes
 
 * This program runs undercabinet LED lights AND temperature sensor from a single
  * WEMOS D1 esp8266
 
 # Version History
 
+## Version 2.0.0
+  First iteration of the clock
+  
 ## Version 1.0-1.2
   V1.0 was development in the Arduino IDE in 2018
 ## Version 1.3PIO
@@ -20,8 +23,7 @@ It implements simple ON/OFF functionality but can also display various modes
   - inability to store # of LED on disk
   - Fridge unit hardware update to include 1000uF and level shifter and in-line resistor on data line -- didn't help
   - Modified logic to turn LEDS on one at a time to reduce current shock
-  
-    
+   
 # Hardware Notes
  * 
  * 

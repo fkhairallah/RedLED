@@ -16,7 +16,7 @@ dConsole console;
 
  * ********************************************************************************
 */
-#define CUSTOM_COMMANDS "Custom Commands: on, off, mode #, led #, test"
+#define CUSTOM_COMMANDS "Custom Commands: on, off, mode #, led #, test, noaa"
 
 void executeCustomCommands(char* commandString,char* parameterString)
 {
@@ -41,6 +41,12 @@ void executeCustomCommands(char* commandString,char* parameterString)
   {
     console.println(CUSTOM_COMMANDS);
     testLED();
+  }
+
+  if (strcmp(commandString, "noaa") == 0) {
+    strcpy(NoaaStation, parameterString);
+    writeConfigToDisk();
+    console.printf("NOAA station changed to %s\r\n", NoaaStation);
   }
 }
 

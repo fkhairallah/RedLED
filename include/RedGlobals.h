@@ -17,7 +17,7 @@
  * ********************************************************************************
 */
 
-//#define TEMP_SENSOR_PRESENT                 // indicates a temperature sensor is present
+#define TEMP_SENSOR_PRESENT                 // indicates a temperature sensor is present
 
 #ifdef TEMP_SENSOR_PRESENT
 #define _TEMP_SENSOR_PERIOD 10000         // in ms the frequency of temperature sensor reading
@@ -25,8 +25,8 @@
 #define TEMPERATURE_PRECISION 9           // Lower resolution
 #endif
 
-#define VERSION "V1.5"      // N.B: document changes in README.md
-#define MQTT_TOPIC_PREFIX "led" // prefix for all MQTT topics
+#define VERSION "V2.0"      // N.B: document changes in README.md
+#define MQTT_TOPIC_PREFIX "tide" // prefix for all MQTT topics
 
 // in WiFiConfig
 extern char myHostName[];
@@ -36,6 +36,7 @@ extern char mqttPort[];
 extern char mqttUser[];
 extern char mqttPwd[];
 extern char numberOfLED[]; // nunber of leds in the strings
+extern char NoaaStation[];
 void configureESP();       // load configuration from FLASH & configure WIFI
 void checkConnection(); // check WIFI connection
 void writeConfigToDisk();
